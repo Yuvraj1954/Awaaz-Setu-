@@ -150,31 +150,75 @@ SMART_RESPONSES = {
 def detect_intent(text, service, language):
     t = text.lower()
 
-    if any(x in t for x in ["hi", "hello", "नमस्ते"]):
+    # -------- GREETING --------
+    if any(x in t for x in ["hi", "hello", "hey", "namaste", "नमस्ते"]):
         return "greeting"
 
-    if "emergency" in t or "112" in t or "आपात" in t:
+    # -------- HELP --------
+    if "help" in t or "what can you do" in t or "मदद" in t:
+        return "help"
+
+    # -------- EMERGENCY --------
+    if "emergency" in t or "आपात" in t:
         return "emergency_numbers"
+
+    if "police" in t or "112" in t:
+        return "police_number"
+
+    if "ambulance" in t or "108" in t:
+        return "ambulance_number"
+
+    if "hospital near" in t or "government hospital" in t or "अस्पताल" in t:
+        return "emergency_guidance"
+
+    # -------- WOMEN --------
+    if "women helpline" in t or "महिला हेल्पलाइन" in t or "181" in t:
+        return "women_helpline"
+
+    if "pregnancy" in t or "pregnant" in t or "गर्भ" in t:
+        return "pregnancy"
+
+    if "maternity" in t or "मातृत्व" in t:
+        return "maternity_benefit"
+
+    # -------- CHILD --------
+    if "child helpline" in t or "1098" in t or "चाइल्ड हेल्पलाइन" in t:
+        return "child_helpline"
 
     if ("child" in t or "बच्चा" in t) and ("vaccine" in t or "vaccination" in t or "टीका" in t):
         return "child_vaccination"
 
-    if "women" in t or "महिला" in t:
-        return "women_helpline"
+    if "child" in t or "बच्चा" in t:
+        return "child_health"
 
-    if "hospital" in t or "अस्पताल" in t:
-        return "hospital_near_me"
+    # -------- HEALTH --------
+    if "fever" in t or "बुखार" in t:
+        return "fever"
 
+    if "cough" in t or "cold" in t or "खांसी" in t:
+        return "cough_cold"
+
+    if "headache" in t or "सिर दर्द" in t:
+        return "headache"
+
+    if "stomach" in t or "पेट" in t:
+        return "stomach_pain"
+
+    # -------- GOVERNMENT SCHEMES --------
     if "ration" in t or "राशन" in t:
         return "ration_card"
 
-    if "ayushman" in t or "आयुष्मान" in t:
+    if "ayushman" in t or "आयुष्मान" in t or "health card" in t:
         return "ayushman_bharat"
 
-    if "pension" in t or "पेंशन" in t:
+    if "pension" in t or "पेंशन" in t or "senior citizen" in t:
         return "pension"
 
-    if "aadhar" in t or "आधार" in t:
+    if "pm awas" in t or "awas yojana" in t or "आवास योजना" in t:
+        return "housing"
+
+    # -------- DOCUMENTS --------
+    if "aadhar" in t or "aadhaar" in t or "आधार" in t:
         return "aadhar"
 
     if "voter" in t or "मतदाता" in t:
@@ -186,18 +230,7 @@ def detect_intent(text, service, language):
     if "birth" in t or "जन्म" in t:
         return "birth_certificate"
 
-    if "house" in t or "आवास" in t:
-        return "housing"
-
-    if "fever" in t or "बुखार" in t:
-        return "fever"
-
-    if "pregnancy" in t or "गर्भ" in t:
-        return "pregnancy"
-
-    if "child" in t or "बच्चा" in t:
-        return "child_health"
-
+    # -------- DEFAULT (SAFE) --------
     return "default"
 
 # ---------------- API ----------------
