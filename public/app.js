@@ -5,30 +5,32 @@ const translations = {
     en: {
         title: 'AwaazSetu',
         subtitle: 'Your Voice Bridge to Services',
+        serviceLabel: 'Choose Service',
         govt: 'Government Services',
         health: 'Healthcare',
         micLabel: 'Tap to Speak',
-        inputLabel: 'Type what you want to say:',
+        inputLabel: 'How can we help you?',
         inputPlaceholder: 'Type your question here...',
-        submit: 'Submit',
+        submit: 'Ask Question',
         cancel: 'Cancel',
-        responseTitle: 'Response:',
+        responseTitle: 'Response',
         newQuery: 'Ask Another Question',
-        loading: 'Processing...'
+        loading: 'Finding information...'
     },
     hi: {
         title: 'आवाज़सेतु',
         subtitle: 'सेवाओं के लिए आपका आवाज़ पुल',
+        serviceLabel: 'सेवा चुनें',
         govt: 'सरकारी सेवाएं',
         health: 'स्वास्थ्य सेवा',
         micLabel: 'बोलने के लिए टैप करें',
-        inputLabel: 'आप क्या कहना चाहते हैं वह लिखें:',
+        inputLabel: 'हम आपकी कैसे मदद कर सकते हैं?',
         inputPlaceholder: 'अपना सवाल यहाँ लिखें...',
-        submit: 'भेजें',
+        submit: 'सवाल पूछें',
         cancel: 'रद्द करें',
-        responseTitle: 'जवाब:',
+        responseTitle: 'जवाब',
         newQuery: 'दूसरा सवाल पूछें',
-        loading: 'प्रक्रिया जारी है...'
+        loading: 'जानकारी ढूंढ रहे हैं...'
     }
 };
 
@@ -36,15 +38,16 @@ function updateLanguage() {
     const t = translations[currentLanguage];
     document.getElementById('app-title').textContent = t.title;
     document.getElementById('app-subtitle').textContent = t.subtitle;
+    document.getElementById('service-title-label').textContent = t.serviceLabel;
     document.getElementById('govt-label').textContent = t.govt;
     document.getElementById('health-label').textContent = t.health;
     document.getElementById('mic-label').textContent = t.micLabel;
     document.getElementById('input-label').textContent = t.inputLabel;
     document.getElementById('user-input').placeholder = t.inputPlaceholder;
-    document.getElementById('submit-btn').textContent = t.submit;
-    document.getElementById('cancel-btn').textContent = t.cancel;
+    document.getElementById('submit-text').textContent = t.submit;
+    document.getElementById('cancel-text').textContent = t.cancel;
     document.getElementById('response-title').textContent = t.responseTitle;
-    document.getElementById('new-query-btn').textContent = t.newQuery;
+    document.getElementById('new-query-text').textContent = t.newQuery;
     document.getElementById('loading-text').textContent = t.loading;
     document.documentElement.lang = currentLanguage;
 }
@@ -67,7 +70,7 @@ document.querySelectorAll('.service-btn').forEach(btn => {
 });
 
 document.getElementById('mic-button').addEventListener('click', function() {
-    document.getElementById('mic-button').style.display = 'none';
+    this.style.display = 'none';
     document.getElementById('text-input-section').style.display = 'block';
     document.getElementById('response-section').style.display = 'none';
     document.getElementById('user-input').focus();
