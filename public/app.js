@@ -337,3 +337,27 @@ async function submitQuery() {
         document.getElementById('mic-button').style.display = 'flex';
     }
 }
+// =========================
+// CLICKABLE "TRY ASKING" PROMPTS
+// =========================
+
+document.querySelectorAll('.example-prompt').forEach(prompt => {
+    prompt.addEventListener('click', () => {
+        const text = prompt.textContent.trim();
+
+        // Put text into input box
+        const input = document.getElementById('user-input');
+        input.value = text;
+
+        // Auto-detect language
+        if (/[\u0900-\u097F]/.test(text)) {
+            currentLanguage = 'hi';
+        } else {
+            currentLanguage = 'en';
+        }
+        updateLanguage();
+
+        // Directly submit the query
+        submitQuery();
+    });
+});
