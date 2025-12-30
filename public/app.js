@@ -199,30 +199,39 @@ document.getElementById('pause-btn').addEventListener('click', forceStopAll);
  PROMPTS (30)
 **********************************/
 const promptPool = [
+  { ui: "नमस्ते", send: "नमस्ते" },
+  { ui: "Hello", send: "hello" },
+
   { ui: "Emergency number", send: "emergency number" },
-  { ui: "Police number", send: "police number" },
-  { ui: "Ambulance number", send: "ambulance number" },
-  { ui: "Hospital near me", send: "hospital" },
+  { ui: "Police number", send: "police emergency number" },
+  { ui: "Ambulance number", send: "ambulance emergency number" },
+
+  { ui: "Hospital near me", send: "nearest government hospital" },
   { ui: "Government hospital", send: "government hospital" },
 
-  { ui: "Vaccination schedule", send: "vaccination" },
-  { ui: "Child vaccination", send: "child vaccination" },
-  { ui: "Pregnancy help", send: "pregnancy" },
-  { ui: "Free treatment scheme", send: "ayushman bharat" },
+  { ui: "Vaccination schedule", send: "vaccination vaccine" },
+  { ui: "Child vaccination", send: "child vaccination vaccine" },
 
-  { ui: "Ration card apply", send: "ration card" },
-  { ui: "Income certificate", send: "income certificate" },
-  { ui: "Birth certificate", send: "birth certificate" },
-  { ui: "Aadhar card apply", send: "aadhar" },
-  { ui: "Voter ID apply", send: "voter id" },
+  { ui: "Pregnancy help", send: "pregnancy care hospital" },
+  { ui: "Free treatment scheme", send: "ayushman bharat health card" },
 
-  { ui: "Old age pension", send: "pension" },
-  { ui: "Senior citizen help", send: "senior citizen pension" },
+  { ui: "Ration card apply", send: "ration card apply" },
+  { ui: "राशन कार्ड कैसे बनवाएं?", send: "राशन कार्ड" },
 
-  { ui: "Women helpline", send: "women helpline" },
-  { ui: "Child helpline", send: "child helpline" }
+  { ui: "Old age pension", send: "old age pension scheme" },
+  { ui: "Senior citizen help", send: "senior citizen pension help" },
+
+  { ui: "PM Awas Yojana", send: "housing pm awas yojana" },
+
+  { ui: "Women helpline", send: "women helpline emergency" },
+  { ui: "Child helpline", send: "child helpline emergency" },
+
+  { ui: "Aadhar card apply", send: "aadhar card apply" },
+  { ui: "Voter ID apply", send: "voter id apply" },
+
+  { ui: "Income certificate", send: "income certificate apply" },
+  { ui: "Birth certificate", send: "birth certificate apply" }
 ];
-
 
 function loadRandomPrompts() {
     const shuffled = [...promptPool].sort(() => 0.5 - Math.random());
