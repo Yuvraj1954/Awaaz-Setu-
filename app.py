@@ -40,16 +40,6 @@ def get_response(service, language, intent):
             return item["response"]
     return "Please visit the nearest government office." if language == "en" else "कृपया पास के सरकारी दफ्तर जाएं।"
 
-# ---------------- FRONTEND ROUTES ----------------
-
-@app.route("/")
-def index():
-    return send_from_directory("public", "index.html")
-
-@app.route("/<path:path>")
-def static_files(path):
-    return send_from_directory("public", path)
-
 # ---------------- API ROUTE ----------------
 
 @app.route("/api/query", methods=["POST"])
@@ -74,4 +64,15 @@ def process_query():
         "success": True
     })
 
+# ---------------- FRONTEND ROUTES ----------------
+
+@app.route("/")
+def index():
+    return send_from_directory("public", "index.html")
+
+@app.route("/<path:path>")
+def static_files(path):
+    return send_from_directory("public", path)
+
 # ⚠️ IMPORTANT: DO NOT USE app.run() ON VERCEL
+# The app instance is automatically detected by Vercel's Python runtime
