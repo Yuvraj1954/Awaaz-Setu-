@@ -199,30 +199,51 @@ document.getElementById('pause-btn').addEventListener('click', forceStopAll);
  PROMPTS (30)
 **********************************/
 const promptPool = [
-    "नमस्ते","Hello","Emergency number","Police number","Ambulance number",
-    "Hospital near me","Old age pension","Vaccination schedule","I have fever",
-    "राशन कार्ड कैसे बनवाएं?","What is Ayushman Bharat?",
-    "आयुष्मान भारत क्या है?","सरकारी योजना बताइए","मुझे बुखार है",
-    "Pregnancy help","Child vaccination","Aadhar card apply",
-    "Voter ID apply","Income certificate","Birth certificate",
-    "PM Awas Yojana","Women helpline","Child helpline",
-    "Government hospital","Free treatment scheme",
-    "Health card","Pension scheme","Senior citizen help"
+  { ui: "Emergency number", send: "emergency number" },
+  { ui: "Police number", send: "police number" },
+  { ui: "Ambulance number", send: "ambulance number" },
+  { ui: "Hospital near me", send: "hospital" },
+  { ui: "Government hospital", send: "government hospital" },
+
+  { ui: "Vaccination schedule", send: "vaccination" },
+  { ui: "Child vaccination", send: "child vaccination" },
+  { ui: "Pregnancy help", send: "pregnancy" },
+  { ui: "Free treatment scheme", send: "ayushman bharat" },
+
+  { ui: "Ration card apply", send: "ration card" },
+  { ui: "Income certificate", send: "income certificate" },
+  { ui: "Birth certificate", send: "birth certificate" },
+  { ui: "Aadhar card apply", send: "aadhar" },
+  { ui: "Voter ID apply", send: "voter id" },
+
+  { ui: "Old age pension", send: "pension" },
+  { ui: "Senior citizen help", send: "senior citizen pension" },
+
+  { ui: "Women helpline", send: "women helpline" },
+  { ui: "Child helpline", send: "child helpline" }
 ];
+
 
 function loadRandomPrompts() {
     const shuffled = [...promptPool].sort(() => 0.5 - Math.random());
+
     document.querySelectorAll('.prompt-item').forEach((el, i) => {
-        el.textContent = shuffled[i];
+        if (!shuffled[i]) return;
+
+        el.textContent = shuffled[i].ui;
+
         el.onclick = () => {
-            paused = false;
-            document.getElementById('user-input').value = el.textContent;
-            currentLanguage = /[\u0900-\u097F]/.test(el.textContent) ? 'hi' : 'en';
+            document.getElementById('user-input').value = shuffled[i].send;
+
+            currentLanguage =
+              /[\u0900-\u097F]/.test(shuffled[i].send) ? 'hi' : 'en';
             updateLanguage();
+
             submitQuery();
         };
     });
 }
+
 
 /*********************************
  ASK ANOTHER QUESTION
