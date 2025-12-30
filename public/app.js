@@ -6,6 +6,7 @@ let currentService = 'auto';
 let recognition;
 let isListening = false;
 let currentUtterance = null;
+let paused = false;
 
 /*********************************
  TRANSLATIONS
@@ -53,18 +54,22 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
     recognition.interimResults = false;
 
     recognition.onstart = () => {
+        if (paused) return;
         isListening = true;
         document.querySelector('.mic-circle').style.background = '#ef4444';
-        document.getElementById('mic-label').textContent = translations[currentLanguage].listening;
+        document.getElementById('mic-label').textContent =
+            translations[currentLanguage].listening;
     };
 
     recognition.onresult = (event) => {
-        const text = event.results[0][0].transcript;
-        document.getElementById('user-input').value = text;
+        if (paused) return;
+        document.getElementById('user-input').value =
+            event.results[0][0].transcript;
     };
 
     recognition.onend = () => {
         stopListening();
+        if (paused) return;
         const text = document.getElementById('user-input').value.trim();
         if (text) submitQuery();
     };
@@ -80,9 +85,10 @@ function stopListening() {
 }
 
 /*********************************
- TEXT TO SPEECH (WEB ONLY)
+ TEXT TO SPEECH
 **********************************/
 function speakText(text, language) {
+    if (paused) return;
     if (!('speechSynthesis' in window)) return;
 
     speechSynthesis.cancel();
@@ -116,21 +122,10 @@ function updateLanguage() {
 }
 
 /*********************************
- LANGUAGE BUTTONS
-**********************************/
-document.querySelectorAll('.lang-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentLanguage = btn.dataset.lang;
-        updateLanguage();
-    });
-});
-
-/*********************************
  MIC BUTTON
 **********************************/
 document.getElementById('mic-button').addEventListener('click', () => {
+    if (paused) return;
     if (!recognition) return alert('Please use Chrome for voice input.');
     recognition.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-IN';
     isListening ? recognition.stop() : recognition.start();
@@ -140,6 +135,8 @@ document.getElementById('mic-button').addEventListener('click', () => {
  SUBMIT QUERY
 **********************************/
 async function submitQuery() {
+    if (paused) return;
+
     const text = document.getElementById('user-input').value.trim();
     if (!text) return;
 
@@ -169,19 +166,34 @@ async function submitQuery() {
 }
 
 /*********************************
- RANDOM + CLICKABLE PROMPTS
+ FORCE STOP (PAUSE BUTTON)
+**********************************/
+function forceStopAll() {
+    paused = true;
+
+    if (recognition && isListening) recognition.stop();
+    if ('speechSynthesis' in window) speechSynthesis.cancel();
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('mic-label').textContent =
+        translations[currentLanguage].micLabel;
+}
+
+document.getElementById("pause-btn").addEventListener("click", forceStopAll);
+
+/*********************************
+ PROMPTS (30 — SAFE)
 **********************************/
 const promptPool = [
-    "नमस्ते",
-    "Emergency number",
-    "I have fever",
-    "राशन कार्ड कैसे बनवाएं?",
-    "What is Ayushman Bharat?",
-    "Ambulance number",
-    "Hospital near me",
-    "Vaccination schedule",
-    "Old age pension",
-    "सरकारी योजना बताइए"
+    "नमस्ते","Hello","Emergency number","Police number","Ambulance number",
+    "Hospital near me","Old age pension","Vaccination schedule","I have fever",
+    "राशन कार्ड कैसे बनवाएं?","What is Ayushman Bharat?",
+    "आयुष्मान भारत क्या है?","सरकारी योजना बताइए","मुझे बुखार है",
+    "Pregnancy help","Child vaccination","Aadhar card apply",
+    "Voter ID apply","Income certificate","Birth certificate",
+    "PM Awas Yojana","Women helpline","Child helpline",
+    "Government hospital","Free treatment scheme",
+    "Health card","Pension scheme","Senior citizen help"
 ];
 
 function loadRandomPrompts() {
@@ -189,6 +201,8 @@ function loadRandomPrompts() {
     document.querySelectorAll('.prompt-item').forEach((el, i) => {
         el.textContent = shuffled[i];
         el.onclick = () => {
+            if (paused) return;
+
             document.getElementById('user-input').value = el.textContent;
             currentLanguage = /[\u0900-\u097F]/.test(el.textContent) ? 'hi' : 'en';
             updateLanguage();
@@ -201,32 +215,12 @@ function loadRandomPrompts() {
         };
     });
 }
-/*********************************
- ASK ANOTHER QUESTION BUTTON
-**********************************/
-document.getElementById('new-query-btn').addEventListener('click', () => {
-    // Stop any ongoing speech
-    if ('speechSynthesis' in window) {
-        speechSynthesis.cancel();
-    }
-
-    // Clear input
-    document.getElementById('user-input').value = '';
-
-    // Hide response
-    document.getElementById('response-section').style.display = 'none';
-
-    // Show mic again
-    document.getElementById('mic-button').style.display = 'flex';
-
-    // Hide text input section (if visible)
-    document.getElementById('text-input-section').style.display = 'none';
-});
 
 /*********************************
  INIT
 **********************************/
 window.addEventListener('load', () => {
+    paused = false;
     updateLanguage();
     loadRandomPrompts();
 });
