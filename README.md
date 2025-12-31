@@ -18,8 +18,6 @@
 ## 🖥️ Platform in Action
 ![AwaazSetu Feature Image](screenshots/web_screen1.png)
 
-> **Note to Judges:** To display this image, upload a high-resolution screenshot of your web app to a folder named `/screenshots` and name it `main_showcase.png`.
-
 ---
 
 ## 🚀 Why AwaazSetu Wins
@@ -51,3 +49,7 @@ Follow these steps to get the project running on your local machine:
    ```bash
    git clone [https://github.com/Yuvraj1954/AwaazSetu.git](https://github.com/Yuvraj1954/AwaazSetu.git)
    cd AwaazSetu
+2. pip install -r requirements.txt
+3. python app.py
+4. Access the Platform Open your browser and navigate to:
+                        **http://localhost:5000**
