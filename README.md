@@ -66,18 +66,18 @@ Follow these steps to get the project running on your local machine:
 # Clone the repository
 git clone [https://github.com/Yuvraj1954/AwaazSetu.git](https://github.com/Yuvraj1954/AwaazSetu.git)
 cd AwaazSetu
-
+```
 ### 2. Configure Environment
 Create a .env file in the root directory or export your MongoDB URI directly:
 ```bash
 export MONGO_URI="your_mongodb_connection_string"
-
+```
 ### 3. Launch the Bridge
 Run the Flask application:
 ```bash
 python app.py
 Access the elite interface at: http://localhost:5000
-
+```
 ## 🛣️ Strategic Roadmap
 
 AwaazSetu is designed to be the "Digital Entry Point" for every household in Bharat:
