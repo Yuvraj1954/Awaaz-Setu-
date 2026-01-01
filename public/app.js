@@ -21,15 +21,13 @@ function setUiState(listening) {
     }
 }
 
-function saveToPersistentLog(text) {
-    let fullHistory = JSON.parse(localStorage.getItem('awaazSetu_FullHistory') || '[]');
-    fullHistory.unshift({ 
-        text, 
-        lang: currentLanguage, 
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) 
-    });
-    localStorage.setItem('awaazSetu_FullHistory', JSON.stringify(fullHistory));
-    updateSidebarUI(fullHistory.slice(0, 5));
+// Fetch history from MongoDB via the Backend
+async function refreshSidebar() {
+    try {
+        const res = await fetch('/api/history'); // Rewritten via vercel.json
+        const history = await res.json();
+        updateSidebarUI(history.slice(0, 5));
+    } catch (e) { console.error("History fetch failed", e); }
 }
 
 function updateSidebarUI(items) {
@@ -38,7 +36,8 @@ function updateSidebarUI(items) {
     container.innerHTML = ""; 
     items.forEach(item => {
         const div = document.createElement('div'); 
-        div.style = "padding: 10px; font-size: 0.8rem; margin-top: 8px; cursor: pointer; color: #94a3b8; border-radius: 10px; background: rgba(255,255,255,0.05);";
+        div.className = "history-item"; // Use a class for cleaner CSS
+        div.style = "padding: 10px; font-size: 0.8rem; margin-top: 8px; cursor: pointer; color: #94a3b8; border-radius: 10px; background: rgba(255,255,255,0.05); transition: 0.2s;";
         div.textContent = item.text.length > 20 ? item.text.substring(0, 20) + "..." : item.text;
         div.onclick = () => { document.getElementById('user-input').value = item.text; submitQuery(); };
         container.appendChild(div);
@@ -46,7 +45,7 @@ function updateSidebarUI(items) {
 }
 
 window.onload = () => { 
-    updateSidebarUI(JSON.parse(localStorage.getItem('awaazSetu_FullHistory') || '[]').slice(0, 5)); 
+    refreshSidebar(); 
     window.speechSynthesis.cancel(); 
 };
 
@@ -71,9 +70,9 @@ if ('webkitSpeechRecognition' in window) {
 async function submitQuery() {
     const text = document.getElementById('user-input').value;
     if (!text) return;
-    saveToPersistentLog(text);
+    
     try {
-        const res = await fetch('/api/query', { 
+        const res = await fetch('/api/query', { // Rewritten via vercel.json
             method: 'POST', 
             headers: { 'Content-Type': 'application/json' }, 
             body: JSON.stringify({ text, language: currentLanguage }) 
@@ -84,15 +83,15 @@ async function submitQuery() {
         document.getElementById('response-text').textContent = data.response;
         responseSection.style.display = 'block';
 
-        // Auto-scroll logic: scroll to the bottom of the fixed-size box
-        setTimeout(() => {
-            responseSection.scrollTop = responseSection.scrollHeight;
-        }, 100);
+        // Auto-scroll logic for fixed height box
+        setTimeout(() => { responseSection.scrollTop = responseSection.scrollHeight; }, 100);
 
         window.speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(data.response); 
         u.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-IN'; 
         window.speechSynthesis.speak(u);
+
+        refreshSidebar();
     } catch (e) { 
         console.error(e); 
         setUiState(false); 
