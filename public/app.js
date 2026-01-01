@@ -2,23 +2,22 @@ let currentLanguage = 'en';
 let recognition;
 let isListening = false;
 
-// --- PERSISTENT HISTORY LOGIC ---
+// --- PERSISTENT LOGS (Last 5 for Sidebar) ---
 function saveToPersistentLog(text) {
-    // 1. Full Logs for history.html
     let fullHistory = JSON.parse(localStorage.getItem('awaazSetu_FullHistory') || '[]');
     const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    
     fullHistory.unshift({ text, lang: currentLanguage, time: timestamp });
     localStorage.setItem('awaazSetu_FullHistory', JSON.stringify(fullHistory));
-
-    // 2. Sidebar View (Last 5 Only)
+    
     updateSidebarUI(fullHistory.slice(0, 5));
 }
 
-function updateSidebarUI(lastFive) {
+function updateSidebarUI(items) {
     const container = document.getElementById('history-list');
     if (!container) return;
     container.innerHTML = ""; 
-    lastFive.forEach(item => {
+    items.forEach(item => {
         const div = document.createElement('div');
         div.style = "background: rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; font-size: 0.8rem; margin-top: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; font-weight: 600;";
         div.textContent = item.text.length > 20 ? item.text.substring(0, 20) + "..." : item.text;
@@ -27,14 +26,13 @@ function updateSidebarUI(lastFive) {
     });
 }
 
-// Initial Sidebar Load
 window.onload = () => {
     const history = JSON.parse(localStorage.getItem('awaazSetu_FullHistory') || '[]');
     updateSidebarUI(history.slice(0, 5));
     window.speechSynthesis.cancel();
 };
 
-// --- API & SPEECH RECOGNITION ---
+// --- API & VOICE ---
 if ('webkitSpeechRecognition' in window) {
     recognition = new webkitSpeechRecognition();
     recognition.onstart = () => { 
@@ -52,9 +50,7 @@ if ('webkitSpeechRecognition' in window) {
 async function submitQuery() {
     const text = document.getElementById('user-input').value;
     if (!text) return;
-    
-    saveToPersistentLog(text); // Save to storage and sidebar
-
+    saveToPersistentLog(text);
     try {
         const res = await fetch('/api/query', { 
             method: 'POST', 
@@ -64,7 +60,6 @@ async function submitQuery() {
         const data = await res.json();
         document.getElementById('response-text').textContent = data.response;
         document.getElementById('response-section').style.display = 'block';
-        
         window.speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(data.response);
         u.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-IN';
@@ -78,6 +73,7 @@ document.getElementById('mic-button').onclick = () => {
     isListening ? recognition.stop() : recognition.start(); 
 };
 
+// LINK TO HISTORY PAGE
 document.getElementById('history-btn').onclick = () => { window.location.href = 'history.html'; };
 
 document.querySelectorAll('.lang-btn').forEach(btn => {
@@ -87,3 +83,14 @@ document.querySelectorAll('.lang-btn').forEach(btn => {
         currentLanguage = btn.dataset.lang;
     };
 });
+
+document.getElementById('new-query-btn').onclick = () => {
+    document.getElementById('response-section').style.display = 'none';
+    document.getElementById('user-input').value = '';
+    window.speechSynthesis.cancel();
+};
+
+document.getElementById('pause-btn').onclick = () => {
+    window.speechSynthesis.cancel();
+    if (recognition) recognition.stop();
+};
