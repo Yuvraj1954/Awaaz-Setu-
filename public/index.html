@@ -2,12 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AwaazSetu | Voice Bridge</title>
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
-    <link rel="shortcut icon" href="favicon.ico">
-    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AwaazSetu | Elite Voice Bridge</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
@@ -15,21 +11,32 @@
 <body>
     <div class="app-layout">
         <aside class="sidebar">
-            <div class="side-logo"><i class="fas fa-satellite-dish"></i></div>
+            <div class="side-logo">
+                <i class="fas fa-satellite-dish"></i>
+            </div>
             <nav class="side-nav">
-                <button class="nav-item active" title="Home"><i class="fas fa-home"></i></button>
-                <button class="nav-item" id="history-trigger" title="History"><i class="fas fa-history"></i></button>
+                <button class="nav-btn active" id="home-btn">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </button>
+                <button class="nav-btn" id="history-btn">
+                    <i class="fas fa-history"></i>
+                    <span>History</span>
+                </button>
             </nav>
-            <div id="history-list" class="history-container">
-                </div>
+            <div id="history-list" class="history-container"></div>
         </aside>
 
         <main class="main-content">
             <header class="top-bar">
-                <div class="brand">
-                    <h1 id="app-title">AwaazSetu</h1>
-                    <div class="status-pill"><span class="pulse-dot"></span> Bridge Active</div>
+                <div class="brand-container">
+                    <h1 id="app-title" class="glow-text">AwaazSetu</h1>
+                    <div class="status-pill">
+                        <span class="pulse-dot"></span> 
+                        <span id="status-text">Bridge Active</span>
+                    </div>
                 </div>
+                
                 <div class="language-pill">
                     <button class="lang-btn active" data-lang="en">EN</button>
                     <button class="lang-btn" data-lang="hi">हिंदी</button>
@@ -40,22 +47,23 @@
                 <div class="interaction-card">
                     <div class="mic-portal" id="mic-button">
                         <div class="outer-glow"></div>
-                        <div class="inner-circle"><i class="fas fa-microphone"></i></div>
+                        <div class="inner-circle">
+                            <i class="fas fa-microphone"></i>
+                        </div>
                         <h2 id="mic-label">Tap to Speak</h2>
                     </div>
                     
                     <button id="pause-btn" class="stop-trigger">Stop Listening</button>
 
                     <div class="response-panel" id="response-section" style="display: none;">
-                        <div class="resp-head"><i class="fas fa-sparkles"></i> Assistant</div>
+                        <div class="resp-head">
+                            <i class="fas fa-sparkles"></i> 
+                            <span>Assistant Response</span>
+                        </div>
                         <p id="response-text"></p>
                         <button class="btn-action" id="new-query-btn">Ask Another</button>
                     </div>
                 </div>
-            </div>
-
-            <div class="loading-overlay" id="loading" style="display: none;">
-                <div class="dna-spinner"></div>
             </div>
         </main>
     </div>
