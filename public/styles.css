@@ -7,9 +7,7 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
 body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark); color: var(--text-main); height: 100vh; overflow: hidden; }
-
 .app-layout { display: flex; height: 100vh; }
 
 /* Sidebar */
@@ -17,17 +15,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 .side-logo-container { text-align: center; padding: 1rem 0 2rem 0; font-size: 2.2rem; color: var(--primary); }
 .nav-btn { width: 100%; display: flex; align-items: center; gap: 12px; padding: 12px; margin-bottom: 10px; background: var(--glass); border: 1px solid var(--border); border-radius: 12px; color: #94a3b8; cursor: pointer; transition: 0.3s; font-weight: 600; }
 .nav-btn.active { background: rgba(255,255,255,0.1); color: #fff; border-color: var(--primary); }
-
-.history-label {
-    font-size: 0.7rem;
-    font-weight: 800;
-    color: #64748b;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin: 2rem 0 0.75rem 0.5rem;
-    display: block;
-    opacity: 0.9;
-}
+.history-label { font-size: 0.7rem; font-weight: 800; color: #64748b; letter-spacing: 0.15em; text-transform: uppercase; margin: 1.5rem 0 0.5rem 0.5rem; display: block; }
 
 /* Status Dot */
 .status-pill { display: inline-flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 6px 14px; border-radius: 100px; font-size: 0.85rem; margin-top: 10px; }
@@ -40,19 +28,18 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 
 /* Header & Branding */
 .main-content { flex: 1; display: flex; flex-direction: column; position: relative; }
-.top-bar { display: flex; justify-content: flex-end; padding: 1.5rem 3rem; position: relative; }
+.top-bar { display: flex; justify-content: flex-end; padding: 1.5rem 3rem; position: relative; z-index: 10; }
 .brand-container { position: absolute; left: 50%; transform: translateX(-50%); text-align: center; }
 .glow-text { font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-/* Interaction Zone */
+/* Interaction Zone Spacing Optimized */
 .interaction-zone { flex: 1; display: flex; align-items: center; justify-content: center; }
-.interaction-card { width: 100%; max-width: 600px; padding: 3rem; text-align: center; background: var(--glass); border: 1px solid var(--border); border-radius: 32px; backdrop-filter: blur(40px); }
+.interaction-card { width: 100%; max-width: 600px; padding: 2.5rem; text-align: center; background: var(--glass); border: 1px solid var(--border); border-radius: 32px; backdrop-filter: blur(40px); }
 
-/* Microphone Spacing */
-.mic-portal { position: relative; width: 200px; height: 200px; margin: 0 auto; cursor: pointer; }
-.inner-circle { width: 100px; height: 100px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; margin: 40px auto 10px auto; box-shadow: 0 0 40px rgba(79, 70, 229, 0.4); }
+.mic-portal { position: relative; width: 100%; margin: 0 auto; cursor: pointer; }
+.inner-circle { width: 100px; height: 100px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 3rem; margin: 0 auto 15px auto; box-shadow: 0 0 40px rgba(79, 70, 229, 0.4); }
+#mic-label { font-weight: 600; font-size: 1.4rem; margin-top: 10px; margin-bottom: 5px; } /* Lowered tap to speak */
 
-/* FIXED: Perfect spacing for Stop Listening button */
 .stop-trigger { 
     background: rgba(239, 68, 68, 0.1); 
     color: #ef4444; 
@@ -61,14 +48,13 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
     border-radius: 100px; 
     cursor: pointer; 
     font-weight: 600; 
-    margin-top: 30px; /* Moves button slightly lower to avoid touching text */
+    margin-top: 15px; /* Pulled up to reduce gap */
 }
 
 /* Response Section */
-.response-panel { margin-top: 45px; border-top: 1px solid var(--border); padding-top: 30px; }
-.resp-head { font-weight: 800; color: var(--primary); margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-#response-text { line-height: 1.6; font-size: 1.1rem; margin-bottom: 30px; }
-
+.response-panel { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; }
+.resp-head { font-weight: 800; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+#response-text { line-height: 1.6; font-size: 1.1rem; margin-bottom: 20px; }
 .btn-action { background: var(--primary); color: white; border: none; padding: 12px 28px; border-radius: 12px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3); }
 
 .lang-btn { background: var(--glass); border: 1px solid var(--border); color: #94a3b8; padding: 8px 18px; border-radius: 10px; cursor: pointer; margin-left: 8px; font-weight: 700; }
