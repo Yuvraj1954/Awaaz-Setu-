@@ -1,11 +1,21 @@
 let currentLanguage = 'en';
 let recognition;
+
+// --- PAGINATION STATE ---
 let currentPage = 1;
-const itemsPerPage = 7;
+const itemsPerPage = 8;
 
 const UI_TEXT = {
-    en: { home: "Home", history: "History", recent: "RECENT QUERIES", status: "Bridge Active", tap: "Tap to Speak", stop: "Stop Listening", try: "TRY ASKING" },
-    hi: { home: "मुख्य", history: "इतिहास", recent: "हाल के प्रश्न", status: "ब्रिज सक्रिय है", tap: "बोलने के लिए टैप करें", stop: "सुनना बंद करें", try: "पूछ कर देखें" }
+    en: { 
+        home: "Home", history: "History", recent: "RECENT QUERIES", 
+        status: "Bridge Active", tap: "Tap to Speak", stop: "Stop Listening", 
+        try: "TRY ASKING", listening: "Listening..." 
+    },
+    hi: { 
+        home: "मुख्य", history: "इतिहास", recent: "हाल के प्रश्न", 
+        status: "ब्रिज सक्रिय है", tap: "बोलने के लिए टैप करें", stop: "सुनना बंद करें", 
+        try: "पूछ कर देखें", listening: "सुन रहा हूँ..." 
+    }
 };
 
 const PROMPTS = {
@@ -13,17 +23,25 @@ const PROMPTS = {
     hi: ["नमस्ते", "मदद", "आयुष्मान भारत", "राशन कार्ड", "पीएम किसान", "अस्पताल", "पुलिस १००", "एम्बुलेंस १०८", "आवेदन", "फायदे", "किसान सूचना", "आपातकाल", "हेल्थ कार्ड", "संपर्क", "स्थिति"]
 };
 
-// --- CORE FUNCTIONS ---
+// --- VOICE SYNTHESIS ---
+function speakResponse(text) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-IN';
+    utterance.rate = 1.0;
+    window.speechSynthesis.speak(utterance);
+}
 
+// --- UI UPDATES ---
 function updateFullUI() {
     const t = UI_TEXT[currentLanguage];
-    document.getElementById('nav-home').textContent = t.home;
-    document.getElementById('nav-hist').textContent = t.history;
-    document.getElementById('side-recent').textContent = t.recent;
-    document.getElementById('status-text').textContent = t.status;
-    document.getElementById('mic-label').textContent = t.tap;
-    document.getElementById('pause-btn').textContent = t.stop;
-    document.getElementById('grid-label').textContent = t.try;
+    if (document.getElementById('nav-home')) document.getElementById('nav-home').textContent = t.home;
+    if (document.getElementById('nav-hist')) document.getElementById('nav-hist').textContent = t.history;
+    if (document.getElementById('side-recent')) document.getElementById('side-recent').textContent = t.recent;
+    if (document.getElementById('status-text')) document.getElementById('status-text').textContent = t.status;
+    if (document.getElementById('mic-label')) document.getElementById('mic-label').textContent = t.tap;
+    if (document.getElementById('pause-btn')) document.getElementById('pause-btn').textContent = t.stop;
+    if (document.getElementById('grid-label')) document.getElementById('grid-label').textContent = t.try;
     renderGrid();
 }
 
@@ -40,18 +58,49 @@ function renderGrid() {
     });
 }
 
+// --- SIDEBAR RECENT QUERIES (LIMIT 5) ---
 async function refreshRecentQueries() {
     try {
         const res = await fetch('/api/history');
         const data = await res.json();
         const container = document.getElementById('history-list');
         if (!container) return;
-        container.innerHTML = data.slice(0, 5).map(item => `
-            <div class="history-item" onclick="document.getElementById('user-input').value='${item.text}'; submitQuery();">
-                ${item.text.length > 20 ? item.text.substring(0, 20) + '...' : item.text}
-            </div>
+        container.innerHTML = "";
+        data.slice(0, 5).forEach(item => {
+            const div = document.createElement('div');
+            div.className = "history-item";
+            div.textContent = item.text.length > 20 ? item.text.substring(0, 20) + "..." : item.text;
+            div.onclick = () => { document.getElementById('user-input').value = item.text; submitQuery(); };
+            container.appendChild(div);
+        });
+    } catch (e) { console.error("Sidebar update failed", e); }
+}
+
+// --- HISTORY PAGE PAGINATION ---
+async function fetchHistoryLogs() {
+    const tbody = document.getElementById('history-body');
+    if (!tbody) return;
+    
+    try {
+        const res = await fetch('/api/history');
+        const allData = await res.json();
+        
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedData = allData.slice(start, end);
+        
+        tbody.innerHTML = paginatedData.map(item => `
+            <tr>
+                <td style="color: var(--primary); font-weight: 800;">${item.time}</td>
+                <td style="font-weight: 600;">${item.text}</td>
+                <td><span style="background:rgba(79,70,229,0.2); padding:4px 10px; border-radius:8px; font-size:0.75rem; color:var(--primary); font-weight:800;">${item.language.toUpperCase()}</span></td>
+            </tr>
         `).join('');
-    } catch (e) { console.error(e); }
+        
+        document.getElementById('page-num').textContent = `Page ${currentPage}`;
+        document.getElementById('prev-btn').disabled = currentPage === 1;
+        document.getElementById('next-btn').disabled = end >= allData.length;
+    } catch (e) { console.error("History fetch failed", e); }
 }
 
 async function submitQuery() {
@@ -63,46 +112,16 @@ async function submitQuery() {
         body: JSON.stringify({ text, language: currentLanguage })
     });
     const data = await res.json();
-    document.getElementById('response-text').textContent = data.response;
-    document.getElementById('response-section').style.display = 'block';
-    
-    // Speak response
-    window.speechSynthesis.cancel();
-    const utt = new SpeechSynthesisUtterance(data.response);
-    utt.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-IN';
-    window.speechSynthesis.speak(utt);
-    
+    const respSection = document.getElementById('response-section');
+    if (respSection) {
+        document.getElementById('response-text').textContent = data.response;
+        respSection.style.display = 'block';
+    }
+    speakResponse(data.response);
     refreshRecentQueries();
 }
 
-// --- PAGINATION LOGIC FOR HISTORY PAGE ---
-
-async function fetchHistoryLogs() {
-    const tbody = document.getElementById('history-body');
-    if (!tbody) return;
-    
-    const res = await fetch('/api/history');
-    const allData = await res.json();
-    
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    const paginatedData = allData.slice(start, end);
-    
-    tbody.innerHTML = paginatedData.map(item => `
-        <tr>
-            <td style="color: var(--primary); font-weight: 800;">${item.time}</td>
-            <td style="font-weight: 600;">${item.text}</td>
-            <td><span class="status-pill">${item.language.toUpperCase()}</span></td>
-        </tr>
-    `).join('');
-    
-    document.getElementById('page-num').textContent = `Page ${currentPage}`;
-    document.getElementById('prev-btn').disabled = currentPage === 1;
-    document.getElementById('next-btn').disabled = end >= allData.length;
-}
-
 // --- INITIALIZATION ---
-
 window.onload = () => {
     updateFullUI();
     refreshRecentQueries();
@@ -118,15 +137,39 @@ window.onload = () => {
     });
 };
 
+// --- SPEECH RECOGNITION ---
 if ('webkitSpeechRecognition' in window) {
     recognition = new webkitSpeechRecognition();
-    recognition.onstart = () => { document.getElementById('mic-container').classList.add('pulse-active'); };
+    recognition.onstart = () => { 
+        document.getElementById('mic-container').classList.add('pulse-active'); 
+        if (document.getElementById('mic-label')) document.getElementById('mic-label').textContent = UI_TEXT[currentLanguage].listening;
+    };
+    recognition.onresult = (e) => { 
+        document.getElementById('user-input').value = e.results[0][0].transcript; 
+    };
     recognition.onend = () => { 
         document.getElementById('mic-container').classList.remove('pulse-active');
+        if (document.getElementById('mic-label')) document.getElementById('mic-label').textContent = UI_TEXT[currentLanguage].tap;
         if (document.getElementById('user-input').value) submitQuery(); 
     };
-    recognition.onresult = (e) => { document.getElementById('user-input').value = e.results[0][0].transcript; };
 }
 
-document.getElementById('mic-button').onclick = () => { recognition.start(); };
-document.getElementById('pause-btn').onclick = () => { recognition.stop(); window.speechSynthesis.cancel(); };
+const micBtn = document.getElementById('mic-button');
+if (micBtn) micBtn.onclick = () => { recognition.start(); };
+
+const pauseBtn = document.getElementById('pause-btn');
+if (pauseBtn) pauseBtn.onclick = () => { recognition.stop(); window.speechSynthesis.cancel(); };
+
+// --- PAGINATION LISTENERS ---
+if (document.getElementById('prev-btn')) {
+    document.getElementById('prev-btn').onclick = () => { if(currentPage > 1) { currentPage--; fetchHistoryLogs(); } };
+}
+if (document.getElementById('next-btn')) {
+    document.getElementById('next-btn').onclick = () => { currentPage++; fetchHistoryLogs(); };
+}
+
+async function clearLogs() {
+    if (!confirm("Clear all logs?")) return;
+    await fetch('/api/clear', { method: 'POST' });
+    location.reload();
+}
