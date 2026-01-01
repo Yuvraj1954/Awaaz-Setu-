@@ -12,10 +12,12 @@
         <aside class="sidebar">
             <div class="side-logo-container"><i class="fas fa-satellite-dish"></i></div>
             <nav class="side-nav">
-                <button class="nav-btn active" onclick="window.location.reload()"><i class="fas fa-home"></i> <span>Home</span></button>
-                <button class="nav-btn" onclick="window.location.href='history.html'"><i class="fas fa-history"></i> <span>History</span></button>
+                <button class="nav-btn active"><i class="fas fa-home"></i> <span id="nav-home">Home</span></button>
+                <button class="nav-btn" onclick="window.location.href='history.html'">
+                    <i class="fas fa-history"></i> <span id="nav-hist">History</span>
+                </button>
             </nav>
-            <div class="history-label">RECENT QUERIES</div>
+            <div class="history-label" id="side-recent">RECENT QUERIES</div>
             <div id="history-list" class="history-container"></div>
         </aside>
 
@@ -34,22 +36,19 @@
             <div class="interaction-zone">
                 <div class="interaction-card">
                     <div class="mic-portal" id="mic-button">
-                        <div class="inner-circle" id="mic-container">
-                            <i class="fas fa-microphone" id="mic-icon"></i>
-                            <div class="waveform" id="waveform">
-                                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                            </div>
-                        </div>
+                        <div class="inner-circle" id="mic-container"><i class="fas fa-microphone"></i></div>
                         <h2 id="mic-label">Tap to Speak</h2>
                     </div>
                     <button id="pause-btn" class="stop-trigger">Stop Listening</button>
-                    <div class="response-panel" id="response-section" style="display: none;">
+                    <div class="response-panel" id="response-section" style="display: none; margin-top:20px;">
                         <p id="response-text" style="color: white;"></p>
-                        <button class="btn-action" onclick="location.reload()">Ask Another</button>
                     </div>
                 </div>
 
-                <div class="command-grid-layout" id="command-grid"></div>
+                <div class="suggestion-section" style="width: 100%; max-width: 650px; margin-top: 40px; text-align: center;">
+                    <p id="grid-label" style="font-size:0.75rem; color:var(--primary); font-weight:800; letter-spacing:2px;">TRY ASKING</p>
+                    <div id="command-grid" class="command-grid-layout"></div>
+                </div>
             </div>
         </main>
     </div>
