@@ -202,13 +202,19 @@ async function submitQuery() {
         
         const respBox = document.getElementById('response-section');
         const respText = document.getElementById('response-text');
+        
         if (respBox && respText) {
-            respText.textContent = data.response;
+            // FIX: Convert **text** to <b>text</b> and \n to <br> to render styling
+            let formattedText = data.response
+                .replace(/\*\*(.*?)\*\*/g, '<strong style="color:var(--secondary);">$1</strong>')
+                .replace(/\n/g, '<br>');
+
+            respText.innerHTML = formattedText; 
             respBox.style.display = 'block';
         }
         
-        // Voice Feedback
-        const utt = new SpeechSynthesisUtterance(data.response);
+        // Voice Feedback (Uses raw text for speech)
+        const utt = new SpeechSynthesisUtterance(data.response.replace(/\*\*/g, ''));
         utt.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-IN';
         window.speechSynthesis.speak(utt);
         
@@ -234,7 +240,7 @@ window.onload = () => {
     // FORCE STOP BUTTON TO BE VISIBLE ALWAYS
     const stopBtn = document.getElementById('pause-btn');
     if (stopBtn) {
-        stopBtn.style.display = 'inline-block'; // Or 'block' based on your layout
+        stopBtn.style.display = 'inline-block'; 
         stopBtn.onclick = stopMic;
     }
 
