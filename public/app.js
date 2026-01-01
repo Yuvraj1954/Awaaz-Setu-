@@ -1,5 +1,7 @@
 let currentLanguage = 'en';
 let recognition;
+let currentPage = 1;
+const itemsPerPage = 7;
 
 const UI_TEXT = {
     en: { home: "Home", history: "History", recent: "RECENT QUERIES", status: "Bridge Active", tap: "Tap to Speak", stop: "Stop Listening", try: "TRY ASKING", listening: "Listening..." },
@@ -36,23 +38,33 @@ function renderGrid() {
     });
 }
 
+async function fetchHistoryLogs() {
+    const tbody = document.getElementById('history-body');
+    if (!tbody) return;
+    const res = await fetch('/api/history');
+    const allData = await res.json();
+    const start = (currentPage - 1) * itemsPerPage;
+    const paginatedData = allData.slice(start, start + itemsPerPage);
+    tbody.innerHTML = paginatedData.map(item => `
+        <tr><td>${item.time}</td><td>${item.text}</td><td>${item.language.toUpperCase()}</td></tr>
+    `).join('');
+    document.getElementById('page-num').textContent = `Page ${currentPage}`;
+    document.getElementById('prev-btn').disabled = currentPage === 1;
+    document.getElementById('next-btn').disabled = (start + itemsPerPage) >= allData.length;
+}
+
 async function refreshRecentQueries() {
-    try {
-        const res = await fetch('/api/history');
-        const data = await res.json();
-        const container = document.getElementById('history-list');
-        if (!container) return;
-        container.innerHTML = data.slice(0, 5).map(item => `
-            <div class="history-item" onclick="document.getElementById('user-input').value='${item.text}'; submitQuery();">
-                ${item.text.length > 20 ? item.text.substring(0, 20) + '...' : item.text}
-            </div>
-        `).join('');
-    } catch (e) { console.error(e); }
+    const res = await fetch('/api/history');
+    const data = await res.json();
+    const container = document.getElementById('history-list');
+    if (!container) return;
+    container.innerHTML = data.slice(0, 5).map(item => `
+        <div class="history-item" onclick="document.getElementById('user-input').value='${item.text}'; submitQuery();">${item.text}</div>
+    `).join('');
 }
 
 async function submitQuery() {
     const text = document.getElementById('user-input').value;
-    if (!text) return;
     const res = await fetch('/api/query', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -61,19 +73,13 @@ async function submitQuery() {
     const data = await res.json();
     document.getElementById('response-text').textContent = data.response;
     document.getElementById('response-section').style.display = 'block';
-    
-    // Voice response
-    window.speechSynthesis.cancel();
-    const utt = new SpeechSynthesisUtterance(data.response);
-    utt.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-IN';
-    window.speechSynthesis.speak(utt);
-    
     refreshRecentQueries();
 }
 
 window.onload = () => {
     updateFullUI();
     refreshRecentQueries();
+    if (document.getElementById('history-body')) fetchHistoryLogs();
     document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.onclick = () => {
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
@@ -86,17 +92,8 @@ window.onload = () => {
 
 if ('webkitSpeechRecognition' in window) {
     recognition = new webkitSpeechRecognition();
-    recognition.onstart = () => { 
-        document.getElementById('mic-container').classList.add('pulse-active'); 
-        document.getElementById('mic-label').textContent = UI_TEXT[currentLanguage].listening;
-    };
-    recognition.onend = () => { 
-        document.getElementById('mic-container').classList.remove('pulse-active');
-        document.getElementById('mic-label').textContent = UI_TEXT[currentLanguage].tap;
-        if (document.getElementById('user-input').value) submitQuery(); 
-    };
+    recognition.onstart = () => { document.getElementById('mic-container').classList.add('pulse-active'); };
+    recognition.onend = () => { document.getElementById('mic-container').classList.remove('pulse-active'); if(document.getElementById('user-input').value) submitQuery(); };
     recognition.onresult = (e) => { document.getElementById('user-input').value = e.results[0][0].transcript; };
 }
-
 document.getElementById('mic-button').onclick = () => { recognition.start(); };
-document.getElementById('pause-btn').onclick = () => { recognition.stop(); window.speechSynthesis.cancel(); };
