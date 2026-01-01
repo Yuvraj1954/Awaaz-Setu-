@@ -1,103 +1,52 @@
-/*********************************
- GLOBAL STATE & VOICE FIXES
-**********************************/
 let currentLanguage = 'en';
 let recognition;
 let isListening = false;
-let paused = false;
 
-// CRITICAL VOICE FIX: Clear queue before speaking
-function speakText(text, language) {
-    if (!('speechSynthesis' in window)) return;
-    window.speechSynthesis.cancel(); // Clear existing speech
+const translations = {
+    en: { micLabel: 'Tap to Speak', listening: 'Listening...', status: 'Bridge Active' },
+    hi: { micLabel: 'बोलने के लिए टैप करें', listening: 'सुन रहा हूँ...', status: 'ब्रिज सक्रिय है' }
+};
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    const voices = window.speechSynthesis.getVoices();
-
-    if (language === 'hi') {
-        const hindiVoice = voices.find(v => v.lang === 'hi-IN' || v.name.includes('Hindi'));
-        if (hindiVoice) utterance.voice = hindiVoice;
-        utterance.lang = 'hi-IN';
-    } else {
-        const englishVoice = voices.find(v => v.lang === 'en-IN' || v.name.includes('Google US English'));
-        if (englishVoice) utterance.voice = englishVoice;
-        utterance.lang = 'en-IN';
-    }
-
-    utterance.rate = 0.95;
-    setTimeout(() => { window.speechSynthesis.speak(utterance); }, 50); // Small delay for browser stability
+function addToHistory(text) {
+    const container = document.getElementById('history-list');
+    const item = document.createElement('div');
+    item.style = "background: rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; font-size: 0.8rem; margin-top: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1);";
+    item.textContent = text.length > 25 ? text.substring(0, 25) + "..." : text;
+    item.onclick = () => { document.getElementById('user-input').value = text; submitQuery(); };
+    container.prepend(item);
 }
 
-// --- SPEECH RECOGNITION SETUP ---
-if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SpeechRecognition();
-    
-    recognition.onstart = () => {
-        isListening = true;
-        document.querySelector('.mic-circle').style.background = '#ef4444';
-        document.getElementById('mic-label').textContent = "Listening...";
-    };
-
-    recognition.onresult = (event) => {
-        document.getElementById('user-input').value = event.results[0][0].transcript;
-    };
-
-    recognition.onend = () => {
-        isListening = false;
-        document.querySelector('.mic-circle').style.background = 'var(--primary)';
-        document.getElementById('mic-label').textContent = "Tap & Speak";
-        if (!paused && document.getElementById('user-input').value) submitQuery();
-    };
+if ('webkitSpeechRecognition' in window) {
+    recognition = new webkitSpeechRecognition();
+    recognition.onstart = () => { isListening = true; document.getElementById('mic-label').textContent = translations[currentLanguage].listening; document.querySelector('.inner-circle').style.transform = 'scale(1.2)'; };
+    recognition.onresult = (e) => { document.getElementById('user-input').value = e.results[0][0].transcript; };
+    recognition.onend = () => { isListening = false; document.getElementById('mic-label').textContent = translations[currentLanguage].micLabel; document.querySelector('.inner-circle').style.transform = 'scale(1)'; if (document.getElementById('user-input').value) submitQuery(); };
 }
 
-// --- SUBMIT QUERY TO BACKEND ---
 async function submitQuery() {
-    const text = document.getElementById('user-input').value.trim();
+    const text = document.getElementById('user-input').value;
     if (!text) return;
-
-    document.getElementById('loading').style.display = 'flex';
-
+    addToHistory(text);
     try {
-        const res = await fetch('/api/query', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text, language: currentLanguage })
-        });
+        const res = await fetch('/api/query', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text, language: currentLanguage }) });
         const data = await res.json();
-        
-        document.getElementById('loading').style.display = 'none';
         document.getElementById('response-text').textContent = data.response;
         document.getElementById('response-section').style.display = 'block';
-        
-        speakText(data.response, currentLanguage); // Trigger voice response
-    } catch (err) {
-        document.getElementById('loading').style.display = 'none';
-        console.error("Fetch error:", err);
-    }
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(data.response);
+        u.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-IN';
+        window.speechSynthesis.speak(u);
+    } catch (e) { console.error(e); }
 }
 
-// --- LANGUAGE BUTTONS FIX ---
+document.getElementById('mic-button').onclick = () => { recognition.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-IN'; isListening ? recognition.stop() : recognition.start(); };
+
 document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.onclick = () => {
         document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         currentLanguage = btn.dataset.lang;
-        
-        // Sync recognition language
-        if (recognition) recognition.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-IN';
+        document.getElementById('status-text').textContent = translations[currentLanguage].status;
+        document.getElementById('mic-label').textContent = translations[currentLanguage].micLabel;
     };
 });
-
-// --- MIC BUTTON ---
-document.getElementById('mic-button').onclick = () => {
-    if (!recognition) return alert("Use Chrome browser.");
-    paused = false;
-    isListening ? recognition.stop() : recognition.start();
-};
-
-document.getElementById('pause-btn').onclick = () => {
-    paused = true;
-    if (recognition) recognition.stop();
-    window.speechSynthesis.cancel();
-};
