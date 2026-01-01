@@ -67,5 +67,40 @@ Follow these steps to get the project running on your local machine:
 git clone [https://github.com/Yuvraj1954/AwaazSetu.git](https://github.com/Yuvraj1954/AwaazSetu.git)
 cd AwaazSetu
 
+### 2. Configure Environment
+Create a .env file in the root directory or export your MongoDB URI directly:
+```bash
+export MONGO_URI="your_mongodb_connection_string"
+
+### 3. Launch the Bridge
+Run the Flask application:
+```bash
+python app.py
+Access the elite interface at: http://localhost:5000
+
+## 🛣️ Strategic Roadmap
+
+AwaazSetu is designed to be the "Digital Entry Point" for every household in Bharat:
+
+- [x] **Phase 1:** Zero-Hallucination Intent Engine (Bilingual).
+- [x] **Phase 2:** Migration to **MongoDB Atlas** for scalable logging.
+- [x] **Phase 3:** "Elite" UI Overhaul with Radar Visualizations.
+- [ ] **Phase 4:** **WhatsApp Integration** — Voice-Bot for 500M+ WhatsApp users.
+- [ ] **Phase 5:** **Multi-Dialect Expansion** — Adding Bhojpuri, Marathi, and Tamil medical terminology.
+
+---
+
+## 👤 Architect
+
+**Yuvraj**
+*Full-Stack Web Architect | Social Impact Developer*
+
+| Resource | Link |
+| :--- | :--- |
+| **GitHub** | [💻 @Yuvraj1954](https://github.com/Yuvraj1954) |
+| **Live Project** | [🚀 AwaazSetu Web](https://awaaz-setu-seven.vercel.app/) |
+| **Contact** | [✉️ Email Me](mailto:yuvraj.k863888@gmail.com) |
+
+> *"Bridging the gap between high-end technology and the last mile of humanity."*
 # Install Python libraries
 pip install flask flask-cors pymongo
