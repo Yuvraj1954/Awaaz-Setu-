@@ -16,6 +16,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 .nav-btn { width: 100%; display: flex; align-items: center; gap: 12px; padding: 12px; margin-bottom: 10px; background: var(--glass); border: 1px solid var(--border); border-radius: 12px; color: #94a3b8; cursor: pointer; transition: 0.3s; font-weight: 600; }
 .nav-btn.active { background: rgba(255,255,255,0.1); color: #fff; border-color: var(--primary); }
 .history-label { font-size: 0.7rem; font-weight: 800; color: #64748b; letter-spacing: 0.15em; text-transform: uppercase; margin: 1.5rem 0 0.5rem 0.5rem; display: block; }
+.history-container { flex: 1; overflow-y: auto; }
 
 /* Waveform Animation */
 .waveform { display: flex; align-items: center; justify-content: center; gap: 4px; height: 40px; }
@@ -25,7 +26,7 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 .bar:nth-child(5) { animation-delay: 0.5s; }
 @keyframes wave { 0%, 100% { height: 10px; } 50% { height: 35px; } }
 
-/* Main UI Spacing Optimized */
+/* Main UI */
 .main-content { flex: 1; display: flex; flex-direction: column; position: relative; }
 .top-bar { display: flex; justify-content: flex-end; padding: 1.5rem 3rem; position: relative; z-index: 10; }
 .brand-container { position: absolute; left: 50%; transform: translateX(-50%); text-align: center; }
@@ -40,12 +41,25 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
 #mic-label { font-weight: 600; font-size: 1.4rem; margin-top: 10px; margin-bottom: 5px; }
 .stop-trigger { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.2); padding: 10px 24px; border-radius: 100px; cursor: pointer; font-weight: 600; margin-top: 15px; }
 
-/* Response Section Spacing */
-.response-panel { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; }
-.resp-head { font-weight: 800; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-#response-text { line-height: 1.6; font-size: 1.1rem; margin-bottom: 10px; }
+/* Response Section with Scroll Limit */
+.response-panel { 
+    margin-top: 30px; 
+    border-top: 1px solid var(--border); 
+    padding-top: 20px; 
+    max-height: 250px; /* FIXED LIMIT */
+    overflow-y: auto;  /* ENABLE SCROLL */
+    scroll-behavior: smooth;
+    padding-right: 5px;
+}
 
-/* FIXED: Lowered Ask Another Button */
+/* Custom Scrollbar */
+.response-panel::-webkit-scrollbar { width: 4px; }
+.response-panel::-webkit-scrollbar-track { background: transparent; }
+.response-panel::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+.resp-head { font-weight: 800; color: var(--primary); margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+#response-text { line-height: 1.6; font-size: 1.1rem; margin-bottom: 10px; text-align: left; }
+
 .btn-action { 
     background: var(--primary); 
     color: white; 
@@ -55,10 +69,9 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark);
     font-weight: 700; 
     cursor: pointer; 
     box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3); 
-    margin-top: 15px; /* Added spacing to lower the button */
+    margin-top: 15px; 
 }
 
-/* Language Switcher & Status Dot */
 .status-pill { display: inline-flex; align-items: center; gap: 8px; background: rgba(16, 185, 129, 0.1); color: #10b981; padding: 6px 14px; border-radius: 100px; font-size: 0.85rem; margin-top: 10px; }
 .pulse-dot { width: 8px; height: 8px; background: #10b981; border-radius: 50%; animation: pulse-green 2s infinite; }
 @keyframes pulse-green { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); } }
