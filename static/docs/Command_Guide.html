@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AwaazSetu Command Guide</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #1e293b;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        /* Branding Colors */
+        :root {
+            --primary: #4f46e5; /* Indigo */
+            --secondary: #ec4899; /* Pink */
+            --bg-light: #f8fafc;
+        }
+
+        /* Header Styling */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 20px;
+        }
+        h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .subtitle {
+            color: #64748b;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        /* Table Styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        thead {
+            background: var(--primary);
+            color: white;
+        }
+        
+        th {
+            text-align: left;
+            padding: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f1f5f9;
+        }
+
+        /* Badge Styling for Commands */
+        .cmd {
+            display: inline-block;
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin: 2px;
+            border: 1px solid #c7d2fe;
+        }
+        .cmd-hi {
+            background: #fce7f3;
+            color: #9d174d;
+            border-color: #fbcfe8;
+        }
+
+        /* Category Labels */
+        .category {
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-top: 50px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>AwaazSetu</h1>
+        <div class="subtitle">Elite Voice Bridge | Official Command Guide</div>
+    </header>
+
+    <div style="margin-bottom: 30px; color: #475569; line-height: 1.6;">
+        <strong>System Overview:</strong> AwaazSetu uses a deterministic keyword engine. While it supports natural conversation (Hinglish), using specific trigger words ensures 100% accuracy for government services.
+    </div>
+
+    <h3 style="color:var(--secondary);">01. Core Government Services</h3>
+    <table>
+        <thead>
+            <tr>
+                <th width="20%">Category</th>
+                <th width="40%">English Triggers</th>
+                <th width="40%">Hindi / Hinglish Triggers</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="category">Start / Help</td>
+                <td><span class="cmd">Hi</span> <span class="cmd">Start</span> <span class="cmd">Help</span> <span class="cmd">Options</span></td>
+                <td><span class="cmd cmd-hi">Namaste</span> <span class="cmd cmd-hi">Madad</span> <span class="cmd cmd-hi">Shuru karo</span></td>
+            </tr>
+            <tr>
+                <td class="category">Ayushman Bharat</td>
+                <td><span class="cmd">Health Card</span> <span class="cmd">5 Lakh</span> <span class="cmd">PMJAY</span></td>
+                <td><span class="cmd cmd-hi">Ayushman</span> <span class="cmd cmd-hi">Aspatal</span> <span class="cmd cmd-hi">Golden Card</span></td>
+            </tr>
+            <tr>
+                <td class="category">Ration Card</td>
+                <td><span class="cmd">Apply Card</span> <span class="cmd">Food Security</span> <span class="cmd">NFSA</span></td>
+                <td><span class="cmd cmd-hi">Rashan</span> <span class="cmd cmd-hi">Anaj</span> <span class="cmd cmd-hi">Gehu / Chawal</span></td>
+            </tr>
+            <tr>
+                <td class="category">PM Kisan</td>
+                <td><span class="cmd">Farmer Info</span> <span class="cmd">6000 rupees</span> <span class="cmd">Status</span></td>
+                <td><span class="cmd cmd-hi">PM Kisan</span> <span class="cmd cmd-hi">Kheti</span> <span class="cmd cmd-hi">Samman Nidhi</span></td>
+            </tr>
+            <tr>
+                <td class="category">Emergency (SOS)</td>
+                <td><span class="cmd">Police</span> <span class="cmd">Ambulance</span> <span class="cmd">Fire</span> <span class="cmd">100 / 112</span></td>
+                <td><span class="cmd cmd-hi">Police</span> <span class="cmd cmd-hi">Apatkal</span> <span class="cmd cmd-hi">108</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 style="color:var(--secondary);">02. Health & Human Rights</h3>
+    <table>
+        <thead>
+            <tr>
+                <th width="20%">Category</th>
+                <th width="40%">English Triggers</th>
+                <th width="40%">Hindi / Hinglish Triggers</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="category">Maternity</td>
+                <td><span class="cmd">Pregnancy</span> <span class="cmd">Maternity Leave</span> <span class="cmd">PMMVY</span></td>
+                <td><span class="cmd cmd-hi">Garbhavati</span> <span class="cmd cmd-hi">Delivery</span> <span class="cmd cmd-hi">Matritva</span></td>
+            </tr>
+            <tr>
+                <td class="category">Mental Health</td>
+                <td><span class="cmd">Depression</span> <span class="cmd">Anxiety</span> <span class="cmd">Tele-MANAS</span></td>
+                <td><span class="cmd cmd-hi">Tension</span> <span class="cmd cmd-hi">Pagalpan</span> <span class="cmd cmd-hi">Dimagi halat</span></td>
+            </tr>
+            <tr>
+                <td class="category">Generic Meds</td>
+                <td><span class="cmd">Cheap Medicine</span> <span class="cmd">Jan Aushadhi</span> <span class="cmd">PMBJP</span></td>
+                <td><span class="cmd cmd-hi">Sasti dawai</span> <span class="cmd cmd-hi">Generic</span> <span class="cmd cmd-hi">Kendra</span></td>
+            </tr>
+            <tr>
+                <td class="category">Disability</td>
+                <td><span class="cmd">Handicap</span> <span class="cmd">UDID Card</span> <span class="cmd">Wheelchair</span></td>
+                <td><span class="cmd cmd-hi">Viklang</span> <span class="cmd cmd-hi">Divyang</span> <span class="cmd cmd-hi">UDID</span></td>
+            </tr>
+            <tr>
+                <td class="category">Senior Citizens</td>
+                <td><span class="cmd">Old Age Pension</span> <span class="cmd">Elderly Care</span></td>
+                <td><span class="cmd cmd-hi">Vridha Pension</span> <span class="cmd cmd-hi">Buzurg</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        © 2026 AwaazSetu Project. Architected by Yuvraj. <br>
+        Bridging the gap between high-end technology and the last mile of humanity.
+    </div>
+
+</body>
+</html>
