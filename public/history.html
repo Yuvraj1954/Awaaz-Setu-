@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AwaazSetu | Activity Logs</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        .history-table { width: 100%; border-collapse: collapse; margin-top: 2rem; background: var(--glass); border-radius: 16px; overflow: hidden; }
+        .history-table th, .history-table td { padding: 1.2rem; text-align: left; border-bottom: 1px solid var(--border); }
+        .history-table th { background: rgba(255,255,255,0.05); color: var(--primary); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 1px; }
+        .pagination { margin-top: 2rem; display: flex; gap: 15px; justify-content: center; align-items: center; }
+        .page-btn { background: var(--glass); border: 1px solid var(--border); color: white; padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: 0.3s; }
+        .page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .page-btn:hover:not(:disabled) { background: var(--primary); }
+    </style>
+</head>
+<body>
+    <div class="app-layout">
+        <aside class="sidebar">
+            <div class="side-logo-container"><i class="fas fa-satellite-dish"></i></div>
+            <nav class="side-nav">
+                <button class="nav-btn" onclick="window.location.href='index.html'"><i class="fas fa-home"></i> <span>Back Home</span></button>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="brand-container"><h1 class="glow-text">History Logs</h1></div>
+            </header>
+            <div class="container" style="max-width: 900px; margin: 0 auto; width: 100%;">
+                <table class="history-table">
+                    <thead><tr><th>Time</th><th>Query Snippet</th><th>Language</th></tr></thead>
+                    <tbody id="history-body"></tbody>
+                </table>
+                <div class="pagination">
+                    <button id="prev-btn" class="page-btn"><i class="fas fa-chevron-left"></i> Previous</button>
+                    <span id="page-num" style="font-weight: 800;">Page 1</span>
+                    <button id="next-btn" class="page-btn">Next <i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        const fullHistory = JSON.parse(localStorage.getItem('awaazSetu_FullHistory') || '[]');
+
+        function renderPage(page) {
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const items = fullHistory.slice(start, end);
+            const tbody = document.getElementById('history-body');
+            tbody.innerHTML = items.map(i => `<tr><td>${i.time}</td><td>${i.text}</td><td>${i.lang.toUpperCase()}</td></tr>`).join('');
+            document.getElementById('page-num').textContent = `Page ${page}`;
+            document.getElementById('prev-btn').disabled = page === 1;
+            document.getElementById('next-btn').disabled = end >= fullHistory.length;
+        }
+
+        document.getElementById('prev-btn').onclick = () => { if(currentPage > 1) renderPage(--currentPage); };
+        document.getElementById('next-btn').onclick = () => { if(currentPage * itemsPerPage < fullHistory.length) renderPage(++currentPage); };
+        renderPage(1);
+    </script>
+</body>
+</html>
