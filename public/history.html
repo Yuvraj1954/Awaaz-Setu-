@@ -6,28 +6,45 @@
     <title>AwaazSetu | Activity Logs</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="app-layout">
         <aside class="sidebar">
-            <div class="side-logo-container">🌐</div>
+            <div class="side-logo-container"><i class="fas fa-satellite-dish"></i></div>
             <nav class="side-nav">
-                <button class="nav-btn" onclick="window.location.href='index.html'"><i class="fas fa-home"></i> Home</button>
-                <button class="nav-btn active"><i class="fas fa-history"></i> History</button>
-                <button class="nav-btn" style="color: #ef4444; margin-top: 20px;" onclick="clearLogs()"><i class="fas fa-trash"></i> Clear Logs</button>
+                <button class="nav-btn" onclick="window.location.href='index.html'">
+                    <i class="fas fa-home"></i> Home
+                </button>
+                <button class="nav-btn active">
+                    <i class="fas fa-history"></i> History
+                </button>
+                <button class="nav-btn" style="color: #ef4444; margin-top: 20px;" onclick="clearLogs()">
+                    <i class="fas fa-trash"></i> Clear Logs
+                </button>
             </nav>
         </aside>
+
         <main class="main-content">
             <header class="top-bar">
-                <div class="brand-container"><h1 class="glow-text">Activity Logs</h1></div>
+                <div class="brand-container">
+                    <h1 class="glow-text"><i class="fas fa-satellite-dish"></i> Activity Logs</h1>
+                </div>
             </header>
+
             <div style="max-width: 950px; margin: 0 auto; width: 100%; padding: 40px 20px;">
                 <table class="history-table">
                     <thead>
-                        <tr><th>Timestamp</th><th>Query</th><th>Lang</th></tr>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Query</th>
+                            <th>Lang</th>
+                        </tr>
                     </thead>
-                    <tbody id="history-body"></tbody>
+                    <tbody id="history-body">
+                        </tbody>
                 </table>
+
                 <div class="pagination">
                     <button id="prev-btn" class="page-btn">Previous</button>
                     <span id="page-num">Page 1</span>
