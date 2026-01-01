@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AwaazSetu | Home</title>
+    <title>AwaazSetu | Elite Voice Bridge</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -12,17 +12,17 @@
         <aside class="sidebar">
             <div class="side-logo-container"><i class="fas fa-satellite-dish"></i></div>
             <nav class="side-nav">
-                <button class="nav-btn active"><i class="fas fa-home"></i> <span id="nav-home">Home</span></button>
-                <button class="nav-btn" onclick="window.location.href='history.html'"><i class="fas fa-history"></i> <span id="nav-hist">History</span></button>
+                <button class="nav-btn active" onclick="window.location.reload()"><i class="fas fa-home"></i> <span>Home</span></button>
+                <button class="nav-btn" onclick="window.location.href='history.html'"><i class="fas fa-history"></i> <span>History</span></button>
             </nav>
-            <div class="history-label" id="side-recent">RECENT QUERIES</div>
-            <div id="history-list" class="history-container"></div>
+            <div class="history-label" style="text-align:center; margin-top:2rem; font-size:0.7rem; color:var(--primary); font-weight:800; letter-spacing:1px;">RECENT QUERIES</div>
+            <div id="history-list" class="history-container" style="display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:1rem;"></div>
         </aside>
 
         <main class="main-content">
             <header class="top-bar">
                 <div class="brand-container">
-                    <i class="fas fa-satellite-dish" style="color:var(--primary); font-size:2rem;"></i>
+                    <i class="fas fa-satellite-dish" style="color:var(--primary); font-size:2.5rem;"></i>
                     <h1 class="glow-text">AwaazSetu</h1>
                 </div>
                 <div class="language-pill">
@@ -34,22 +34,19 @@
             <div class="interaction-zone">
                 <div class="interaction-card">
                     <div class="mic-portal" id="mic-button">
-                        <div class="inner-circle" id="mic-container">
-                            <i class="fas fa-microphone" id="mic-icon"></i>
-                            <div class="waveform" id="waveform">
-                                <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
-                            </div>
+                        <div class="inner-circle" style="width:90px; height:90px; background:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 15px; font-size:2.5rem;">
+                            <i class="fas fa-microphone"></i>
                         </div>
-                        <h2 id="mic-label">Tap to Speak</h2>
+                        <h2 id="mic-label" style="font-weight:800; letter-spacing:1px;">Tap to Speak</h2>
                     </div>
                     <button id="pause-btn" class="stop-trigger">Stop Listening</button>
-                    <div class="response-panel" id="response-section" style="display: none; margin-top:20px;">
-                        <p id="response-text" style="color: white; font-weight: 600;"></p>
+                    <div id="response-section" style="display:none; margin-top:25px;">
+                        <p id="response-text" style="font-weight:600; line-height:1.6;"></p>
                     </div>
                 </div>
 
                 <div class="suggestion-section">
-                    <p id="grid-label">TRY ASKING</p>
+                    <p style="font-size:0.8rem; color:var(--primary); font-weight:800; letter-spacing:2px; margin-bottom:15px;">TRY ASKING</p>
                     <div id="command-grid" class="command-grid-layout"></div>
                 </div>
             </div>
