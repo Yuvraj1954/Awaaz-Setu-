@@ -6,53 +6,45 @@
     --text-main: #f8fafc;
 }
 
+/* Base Layout Fixes */
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg-dark); color: var(--text-main); height: 100vh; overflow: hidden; }
 .app-layout { display: flex; height: 100vh; opacity: 1 !important; visibility: visible !important; }
 
-/* Sidebar & Navigation */
+/* Sidebar & Navigation Fixes */
 .sidebar { width: 260px; background: rgba(0,0,0,0.3); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 1.5rem; backdrop-filter: blur(20px); }
 .side-logo-container { text-align: center; padding: 1rem 0 2rem 0; font-size: 2.2rem; color: var(--primary); }
 .nav-btn { width: 100%; display: flex; align-items: center; justify-content: flex-start; gap: 12px; padding: 12px 16px; margin-bottom: 10px; background: var(--glass); border: 1px solid var(--border); border-radius: 12px; color: #94a3b8; cursor: pointer; transition: 0.3s; font-weight: 600; text-decoration: none; border: none; }
 .nav-btn.active { background: rgba(255,255,255,0.1); color: #fff; border: 1px solid var(--primary); }
 
-/* Sidebar Recent Queries Fix */
-.history-label { font-size: 0.75rem; font-weight: 800; color: var(--primary); letter-spacing: 0.15em; text-transform: uppercase; margin: 2rem 0 1rem 0; text-align: center; }
-.history-item { width: 90%; padding: 12px; font-size: 0.85rem; color: #cbd5e1; border-radius: 12px; background: rgba(255,255,255,0.05); text-align: center; cursor: pointer; border: 1px solid var(--border); transition: 0.2s; margin: 0 auto 10px auto; }
+/* --- THE CENTERING FIX --- */
+.main-content { flex: 1; display: flex; flex-direction: column; position: relative; overflow-y: auto; }
 
-/* EN/Hindi Language Toggle Fix */
+/* Centered Top Bar Branding */
+.top-bar { display: flex; flex-direction: column; align-items: center; padding: 2rem 1rem; width: 100%; }
+.brand-container { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+.glow-text { font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+/* Centered Language Toggle */
 .language-pill { display: flex; gap: 5px; background: var(--glass); padding: 5px; border-radius: 12px; border: 1px solid var(--border); }
 .lang-btn { background: transparent; border: none; color: #94a3b8; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; transition: 0.3s; }
 .lang-btn.active { background: var(--primary); color: white; }
 
-/* Main UI & Interaction */
-.main-content { flex: 1; display: flex; flex-direction: column; position: relative; }
+/* Interaction Card & Stop Listening CSS */
 .interaction-zone { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-.interaction-card { width: 100%; max-width: 550px; padding: 2.5rem; text-align: center; background: var(--glass); border: 1px solid var(--border); border-radius: 32px; backdrop-filter: blur(40px); }
+.interaction-card { width: 100%; max-width: 550px; padding: 3rem; text-align: center; background: var(--glass); border: 1px solid var(--border); border-radius: 32px; backdrop-filter: blur(40px); margin-bottom: 40px; }
 
-/* Try Asking Font Increase & Spacing */
-.suggestion-section { width: 100%; max-width: 600px; margin-top: 40px; text-align: center; }
+/* FIXED STOP LISTENING CSS */
+.stop-trigger { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); padding: 10px 24px; border-radius: 100px; cursor: pointer; font-weight: 700; margin-top: 20px; transition: 0.3s; font-size: 0.9rem; }
+.stop-trigger:hover { background: rgba(239, 68, 68, 0.25); border-color: #ef4444; transform: scale(1.05); }
+
+/* Suggestion Grid Fix */
+.suggestion-section { width: 100%; max-width: 600px; text-align: center; }
 .command-grid-layout { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; width: 100%; margin-top: 20px; }
-.suggest-chip { background: var(--glass); border: 1px solid var(--border); padding: 12px 5px; border-radius: 12px; color: #cbd5e1; font-size: 0.95rem; font-weight: 600; cursor: pointer; text-align: center; transition: 0.2s; min-height: 55px; display: flex; align-items: center; justify-content: center; }
-.suggest-chip:hover { border-color: var(--primary); color: white; background: rgba(79, 70, 229, 0.1); }
+.suggest-chip { background: var(--glass); border: 1px solid var(--border); padding: 12px 5px; border-radius: 12px; color: #cbd5e1; font-size: 0.95rem; font-weight: 600; cursor: pointer; text-align: center; transition: 0.3s; display: flex; align-items: center; justify-content: center; min-height: 55px; }
 
-/* History Log Table CSS Fix */
+/* History Page Styling */
 .history-table { width: 100%; border-collapse: separate; border-spacing: 0 10px; margin-top: 2rem; }
-.history-table th { padding: 1rem; text-align: left; color: var(--primary); font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; border-bottom: 2px solid var(--border); }
 .history-table td { padding: 1.2rem; background: var(--glass); color: #f8fafc; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-.history-table td:first-child { border-left: 1px solid var(--border); border-radius: 12px 0 0 12px; }
-.history-table td:last-child { border-right: 1px solid var(--border); border-radius: 0 12px 12px 0; }
-
-/* Pagination */
 .pagination { margin: 30px 0; display: flex; justify-content: center; align-items: center; gap: 20px; }
 .page-btn { background: var(--primary); color: white; border: none; padding: 12px 28px; border-radius: 14px; cursor: pointer; font-weight: 800; transition: 0.3s; }
-.page-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-
-/* Mic Animation Fix */
-.inner-circle { width: 90px; height: 90px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto 15px auto; box-shadow: 0 0 30px rgba(79, 70, 229, 0.4); position: relative; }
-.pulse-active { animation: pulse-ring 1.5s infinite; background: linear-gradient(135deg, #4f46e5, #a855f7); }
-@keyframes pulse-ring {
-    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.7); }
-    70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(79, 70, 229, 0); }
-    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(79, 70, 229, 0); }
-}
