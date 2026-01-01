@@ -7,10 +7,9 @@ const translations = {
     hi: { micLabel: 'बोलने के लिए टैप करें', listening: 'सुन रहा हूँ...', status: 'ब्रिज सक्रिय है' }
 };
 
-// --- VOICE OUTPUT (FIXED) ---
 function speakResponse(text) {
     if (!window.speechSynthesis) return;
-    window.speechSynthesis.cancel(); // Clear queue to avoid getting stuck
+    window.speechSynthesis.cancel(); // Clear queue
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-IN';
@@ -22,13 +21,11 @@ function speakResponse(text) {
     }, 100);
 }
 
-// --- HISTORY TRACKER ---
 function addToHistory(text) {
     const container = document.getElementById('history-list');
     if (!container) return;
     
     const item = document.createElement('div');
-    // Styling remains consistent with your sidebar items
     item.style = "background: rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; font-size: 0.8rem; margin-top: 10px; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; font-weight: 600;";
     item.textContent = text.length > 20 ? text.substring(0, 20) + "..." : text;
     
@@ -39,7 +36,6 @@ function addToHistory(text) {
     container.prepend(item);
 }
 
-// --- SPEECH RECOGNITION ---
 if ('webkitSpeechRecognition' in window) {
     recognition = new webkitSpeechRecognition();
     recognition.onstart = () => {
@@ -58,7 +54,6 @@ if ('webkitSpeechRecognition' in window) {
     };
 }
 
-// --- API COMMUNICATION ---
 async function submitQuery() {
     const text = document.getElementById('user-input').value;
     if (!text) return;
@@ -72,17 +67,18 @@ async function submitQuery() {
         });
         const data = await res.json();
         
-        document.getElementById('response-text').textContent = data.response;
-        document.getElementById('response-section').style.display = 'block';
+        const responseBox = document.getElementById('response-text');
+        if (responseBox) {
+            responseBox.textContent = data.response;
+            document.getElementById('response-section').style.display = 'block';
+        }
         
-        // Assistant speaks back
         speakResponse(data.response);
     } catch (e) {
         console.error("API Error:", e);
     }
 }
 
-// --- EVENT LISTENERS ---
 document.getElementById('mic-button').onclick = () => {
     if (!recognition) return alert("Use Chrome for voice features");
     recognition.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-IN';
