@@ -3,24 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AwaazSetu | Elite Voice Assistant</title>
+    <title>AwaazSetu | Elite Voice Bridge</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="mesh-gradient"></div>
-    
     <div class="app-layout">
         <aside class="sidebar">
             <div class="side-logo"><i class="fas fa-satellite-dish"></i></div>
             <nav class="side-nav">
-                <button class="nav-item active" title="Home"><i class="fas fa-home"></i></button>
-                <button class="nav-item" title="History"><i class="fas fa-history"></i></button>
-                <button class="nav-item" title="Settings"><i class="fas fa-cog"></i></button>
+                <button class="nav-item active"><i class="fas fa-home"></i></button>
+                <button class="nav-item"><i class="fas fa-history"></i></button>
             </nav>
-            <div id="history-list" class="history-container">
-                </div>
+            <div class="history-label">RECENT QUERIES</div>
+            <div id="history-list" class="history-container"></div>
         </aside>
 
         <main class="main-content">
@@ -36,25 +34,14 @@
             </header>
 
             <div class="content-body">
-                <p id="app-tagline" class="hero-text">Your voice bridge to government and healthcare services.</p>
-
+                <p id="app-tagline" class="hero-text">Speak naturally to access healthcare and government aid.</p>
                 <div class="interaction-zone">
                     <div class="mic-portal" id="mic-button">
                         <div class="outer-glow"></div>
                         <div class="inner-circle"><i class="fas fa-microphone"></i></div>
                         <h2 id="mic-label">Ready to Listen</h2>
                     </div>
-
                     <button id="pause-btn" class="stop-trigger">Stop Listening</button>
-
-                    <div class="dynamic-prompts">
-                        <h3 id="try-asking-label">Quick Queries</h3>
-                        <div class="prompt-group">
-                            <div class="prompt-item" id="prompt-1"></div>
-                            <div class="prompt-item" id="prompt-2"></div>
-                            <div class="prompt-item" id="prompt-3"></div>
-                        </div>
-                    </div>
                 </div>
 
                 <div class="response-panel" id="response-section" style="display: none;">
@@ -65,7 +52,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="loading-overlay" id="loading" style="display: none;">
                 <div class="dna-spinner"></div>
                 <p id="loading-text">Fetching data...</p>
