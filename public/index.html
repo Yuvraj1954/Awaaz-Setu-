@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AwaazSetu | Elite Voice Bridge</title>
+    <style>
+        html, body { background-color: #020617 !important; margin: 0; padding: 0; }
+        .app-layout { visibility: hidden; } /* Hide UI until CSS is ready */
+    </style>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
@@ -40,7 +44,7 @@
                     <div class="mic-portal" id="mic-button">
                         <div class="inner-circle" id="mic-container">
                             <i class="fas fa-microphone" id="mic-icon"></i>
-                            <div class="waveform" id="waveform">
+                            <div class="waveform" id="waveform" style="display: none;">
                                 <div class="bar"></div>
                                 <div class="bar"></div>
                                 <div class="bar"></div>
@@ -52,7 +56,7 @@
                     </div>
                     <button id="pause-btn" class="stop-trigger">Stop Listening</button>
 
-                    <div class="response-panel" id="response-section">
+                    <div class="response-panel" id="response-section" style="display: none;">
                         <div class="resp-head"><i class="fas fa-sparkles"></i> <span>Assistant Response</span></div>
                         <p id="response-text"></p>
                         <button class="btn-action" id="new-query-btn">Ask Another</button>
