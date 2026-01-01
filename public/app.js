@@ -1,21 +1,9 @@
 let currentLanguage = 'en';
 let recognition;
 
-// --- PAGINATION STATE FOR HISTORY PAGE ---
-let currentPage = 1;
-const itemsPerPage = 8; // Number of logs per page
-
 const UI_TEXT = {
-    en: { 
-        home: "Home", history: "History", recent: "RECENT QUERIES", 
-        status: "Bridge Active", tap: "Tap to Speak", stop: "Stop Listening", 
-        try: "TRY ASKING", listening: "Listening..." 
-    },
-    hi: { 
-        home: "मुख्य", history: "इतिहास", recent: "हाल के प्रश्न", 
-        status: "ब्रिज सक्रिय है", tap: "बोलने के लिए टैप करें", stop: "सुनना बंद करें", 
-        try: "पूछ कर देखें", listening: "सुन रहा हूँ..." 
-    }
+    en: { home: "Home", history: "History", recent: "RECENT QUERIES", status: "Bridge Active", tap: "Tap to Speak", stop: "Stop Listening", try: "TRY ASKING", listening: "Listening..." },
+    hi: { home: "मुख्य", history: "इतिहास", recent: "हाल के प्रश्न", status: "ब्रिज सक्रिय है", tap: "बोलने के लिए टैप करें", stop: "सुनना बंद करें", try: "पूछ कर देखें", listening: "सुन रहा हूँ..." }
 };
 
 const PROMPTS = {
@@ -23,16 +11,6 @@ const PROMPTS = {
     hi: ["नमस्ते", "मदद", "आयुष्मान भारत", "राशन कार्ड", "पीएम किसान", "अस्पताल", "पुलिस १००", "एम्बुलेंस १०८", "आवेदन", "फायदे", "किसान सूचना", "आपातकाल", "हेल्थ कार्ड", "संपर्क", "स्थिति"]
 };
 
-// --- VOICE SYNTHESIS (TTS) ---
-function speakResponse(text) {
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-IN'; // Sets voice based on lang
-    utterance.rate = 1.0;
-    window.speechSynthesis.speak(utterance);
-}
-
-// --- FULL UI TRANSLATION ---
 function updateFullUI() {
     const t = UI_TEXT[currentLanguage];
     if (document.getElementById('nav-home')) document.getElementById('nav-home').textContent = t.home;
@@ -42,10 +20,9 @@ function updateFullUI() {
     if (document.getElementById('mic-label')) document.getElementById('mic-label').textContent = t.tap;
     if (document.getElementById('pause-btn')) document.getElementById('pause-btn').textContent = t.stop;
     if (document.getElementById('grid-label')) document.getElementById('grid-label').textContent = t.try;
-    renderGrid(); // Refresh grid prompts on lang change
+    renderGrid();
 }
 
-// --- RENDER 5X3 COMMAND GRID ---
 function renderGrid() {
     const grid = document.getElementById('command-grid');
     if (!grid) return;
@@ -54,137 +31,72 @@ function renderGrid() {
         const chip = document.createElement('div');
         chip.className = "suggest-chip";
         chip.textContent = text;
-        chip.onclick = () => { 
-            document.getElementById('user-input').value = text; 
-            submitQuery(); 
-        };
+        chip.onclick = () => { document.getElementById('user-input').value = text; submitQuery(); };
         grid.appendChild(chip);
     });
 }
 
-// --- REFRESH SIDEBAR RECENT QUERIES (LIMIT 5) ---
 async function refreshRecentQueries() {
     try {
         const res = await fetch('/api/history');
         const data = await res.json();
         const container = document.getElementById('history-list');
         if (!container) return;
-        container.innerHTML = "";
-        data.slice(0, 5).forEach(item => { // Take only top 5 for sidebar
-            const div = document.createElement('div');
-            div.className = "history-item";
-            div.textContent = item.text.length > 20 ? item.text.substring(0, 20) + "..." : item.text;
-            div.onclick = () => { 
-                document.getElementById('user-input').value = item.text; 
-                submitQuery(); 
-            };
-            container.appendChild(div);
-        });
-    } catch (e) { console.error("Sidebar Refresh Error:", e); }
-}
-
-// --- FETCH PAGINATED LOGS FOR HISTORY PAGE ---
-async function fetchHistoryLogs() {
-    const tbody = document.getElementById('history-body');
-    if (!tbody) return;
-    
-    try {
-        const res = await fetch('/api/history');
-        const allData = await res.json();
-        
-        const start = (currentPage - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        const paginatedData = allData.slice(start, end);
-        
-        tbody.innerHTML = paginatedData.map(item => `
-            <tr>
-                <td style="color: var(--primary); font-weight: 800;">${item.time}</td>
-                <td style="font-weight: 600;">${item.text}</td>
-                <td><span style="background:rgba(79,70,229,0.2); padding:4px 10px; border-radius:8px; font-size:0.75rem; color:var(--primary); font-weight:800;">${item.language.toUpperCase()}</span></td>
-            </tr>
+        container.innerHTML = data.slice(0, 5).map(item => `
+            <div class="history-item" onclick="document.getElementById('user-input').value='${item.text}'; submitQuery();">
+                ${item.text.length > 20 ? item.text.substring(0, 20) + '...' : item.text}
+            </div>
         `).join('');
-        
-        document.getElementById('page-num').textContent = `Page ${currentPage}`;
-        document.getElementById('prev-btn').disabled = currentPage === 1;
-        document.getElementById('next-btn').disabled = end >= allData.length;
-    } catch (e) { console.error("History fetch failed", e); }
+    } catch (e) { console.error(e); }
 }
 
-// --- SUBMIT QUERY TO FLASK API ---
 async function submitQuery() {
     const text = document.getElementById('user-input').value;
     if (!text) return;
-    try {
-        const res = await fetch('/api/query', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text, language: currentLanguage })
-        });
-        const data = await res.json();
-        const respSection = document.getElementById('response-section');
-        if (respSection) {
-            document.getElementById('response-text').textContent = data.response;
-            respSection.style.display = 'block';
-        }
-        speakResponse(data.response); // FIXED: Triggers audio
-        refreshRecentQueries(); // Updates sidebar instantly
-    } catch (e) { console.error("Submission Error:", e); }
+    const res = await fetch('/api/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, language: currentLanguage })
+    });
+    const data = await res.json();
+    document.getElementById('response-text').textContent = data.response;
+    document.getElementById('response-section').style.display = 'block';
+    
+    // Voice response
+    window.speechSynthesis.cancel();
+    const utt = new SpeechSynthesisUtterance(data.response);
+    utt.lang = currentLanguage === 'hi' ? 'hi-IN' : 'en-IN';
+    window.speechSynthesis.speak(utt);
+    
+    refreshRecentQueries();
 }
 
-// --- INITIALIZATION ---
 window.onload = () => {
     updateFullUI();
     refreshRecentQueries();
-    if (document.getElementById('history-body')) fetchHistoryLogs(); // Only run on history page
-
     document.querySelectorAll('.lang-btn').forEach(btn => {
         btn.onclick = () => {
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             currentLanguage = btn.dataset.lang;
-            updateFullUI(); // Translates entire page
+            updateFullUI();
         };
     });
 };
 
-// --- SPEECH RECOGNITION & MIC ANIMATION ---
 if ('webkitSpeechRecognition' in window) {
     recognition = new webkitSpeechRecognition();
     recognition.onstart = () => { 
-        document.getElementById('mic-container').classList.add('pulse-active'); // Triggers waveform
-        if (document.getElementById('mic-label')) document.getElementById('mic-label').textContent = UI_TEXT[currentLanguage].listening;
-    };
-    recognition.onresult = (e) => { 
-        document.getElementById('user-input').value = e.results[0][0].transcript; 
+        document.getElementById('mic-container').classList.add('pulse-active'); 
+        document.getElementById('mic-label').textContent = UI_TEXT[currentLanguage].listening;
     };
     recognition.onend = () => { 
         document.getElementById('mic-container').classList.remove('pulse-active');
-        if (document.getElementById('mic-label')) document.getElementById('mic-label').textContent = UI_TEXT[currentLanguage].tap;
+        document.getElementById('mic-label').textContent = UI_TEXT[currentLanguage].tap;
         if (document.getElementById('user-input').value) submitQuery(); 
     };
+    recognition.onresult = (e) => { document.getElementById('user-input').value = e.results[0][0].transcript; };
 }
 
-const micBtn = document.getElementById('mic-button');
-if (micBtn) micBtn.onclick = () => { recognition.start(); };
-
-const pauseBtn = document.getElementById('pause-btn');
-if (pauseBtn) pauseBtn.onclick = () => { 
-    recognition.stop(); 
-    window.speechSynthesis.cancel(); 
-    document.getElementById('mic-container').classList.remove('pulse-active');
-};
-
-// --- PAGINATION CLICK LISTENERS ---
-if (document.getElementById('prev-btn')) {
-    document.getElementById('prev-btn').onclick = () => { if(currentPage > 1) { currentPage--; fetchHistoryLogs(); } };
-}
-if (document.getElementById('next-btn')) {
-    document.getElementById('next-btn').onclick = () => { currentPage++; fetchHistoryLogs(); };
-}
-
-// --- CLEAR LOGS ---
-async function clearLogs() {
-    if (!confirm("Clear all logs?")) return;
-    await fetch('/api/clear', { method: 'POST' });
-    location.reload();
-}
+document.getElementById('mic-button').onclick = () => { recognition.start(); };
+document.getElementById('pause-btn').onclick = () => { recognition.stop(); window.speechSynthesis.cancel(); };
