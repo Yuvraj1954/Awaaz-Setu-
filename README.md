@@ -72,7 +72,11 @@ Create a .env file in the root directory or export your MongoDB URI directly:
 ```bash
 export MONGO_URI="your_mongodb_connection_string"
 ```
-### 3. Launch the Bridge
+### 3. Install Python libraries
+```bash
+pip install flask flask-cors pymongo
+```
+### 4. Launch the Bridge
 Run the Flask application:
 ```bash
 python app.py
@@ -90,17 +94,22 @@ AwaazSetu is designed to be the "Digital Entry Point" for every household in Bha
 
 ---
 
-## 👤 Architect
+<div align="center">
 
-**Yuvraj**
+## 🚀 Built By
+
+<img src="profile.jpg" width="120" style="border-radius: 50%;" alt="Yuvraj"/>
+
+### Yuvraj Kumar
 *Full-Stack Web Architect | Social Impact Developer*
 
-| Resource | Link |
-| :--- | :--- |
-| **GitHub** | [💻 @Yuvraj1954](https://github.com/Yuvraj1954) |
-| **Live Project** | [🚀 AwaazSetu Web](https://awaaz-setu-seven.vercel.app/) |
-| **Contact** | [✉️ Email Me](mailto:yuvraj.k863888@gmail.com) |
+[![GitHub](https://img.shields.io/badge/GitHub-@Yuvraj1954-181717?style=flat-square&logo=github)](https://github.com/Yuvraj1954)
+[![Portfolio](https://img.shields.io/badge/Portfolio-Visit_Website-38bdf8?style=flat-square&logo=google-chrome&logoColor=white)](https://yuvraj1954.github.io/)
+[![Project](https://img.shields.io/badge/Live_Project-AwaazSetu-FF5722?style=flat-square&logo=vercel&logoColor=white)](https://awaaz-setu-seven.vercel.app/)
+[![Email](https://img.shields.io/badge/Email-Contact_Me-D14836?style=flat-square&logo=gmail&logoColor=white)](mailto:yuvraj.k863888@gmail.com)
+
+<br/>
 
 > *"Bridging the gap between high-end technology and the last mile of humanity."*
-# Install Python libraries
-pip install flask flask-cors pymongo
+
+</div>
